@@ -1,6 +1,3 @@
-[submodule "go.tmbundle"]
-	path = go.tmbundle
-	url = https://github.com/AlanQuatermain/go-tmbundle.git
 [submodule "Soda"]
 	path = Soda
 	url = https://github.com/buymeasoda/soda-theme.git
@@ -10,3 +7,6 @@
 [submodule "TextMate-Themes"]
 	path = TextMate-Themes
 	url = https://github.com/filmgirl/TextMate-Themes.git
+[submodule "go-tmbundle"]
+	path = go-tmbundle
+	url = https://github.com/AlanQuatermain/go-tmbundle.git
