@@ -1,6 +1,3 @@
-[submodule "Sublime-Packages"]
-	path = .
-	url = https://github.com/sublimehq/Packages
 [submodule "go.tmbundle"]
 	path = go.tmbundle
 	url = https://github.com/AlanQuatermain/go-tmbundle.git
