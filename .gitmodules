@@ -1,87 +1,12 @@
-[submodule "c.tmbundle"]
-	path = c.tmbundle
-	url = https://github.com/textmate/c.tmbundle
-[submodule "cmake.tmbundle"]
-	path = cmake.tmbundle
-	url = https://github.com/textmate/cmake.tmbundle.git
-[submodule "css.tmbundle"]
-	path = css.tmbundle
-	url = https://github.com/textmate/css.tmbundle.git
-[submodule "d.tmbundle"]
-	path = d.tmbundle
-	url = https://github.com/textmate/d.tmbundle.git
-[submodule "Diff.tmbundle"]
-	path = Diff.tmbundle
-	url = https://github.com/textmate/Diff.tmbundle.git
-[submodule "go.tmbundle"]
-	path = go.tmbundle
-	url = https://github.com/AlanQuatermain/go-tmbundle.git
-[submodule "haskell.tmbundle"]
-	path = haskell.tmbundle
-	url = https://github.com/textmate/haskell.tmbundle.git
-[submodule "html.tmbundle"]
-	path = html.tmbundle
-	url = https://github.com/textmate/html.tmbundle.git
-[submodule "ini.tmbundle"]
-	path = ini.tmbundle
-	url = https://github.com/textmate/ini.tmbundle.git
-[submodule "java.tmbundle"]
-	path = java.tmbundle
-	url = https://github.com/textmate/java.tmbundle.git
-[submodule "javascript.tmbundle"]
-	path = javascript.tmbundle
-	url = https://github.com/textmate/javascript.tmbundle.git
-[submodule "json.tmbundle"]
-	path = json.tmbundle
-	url = https://github.com/textmate/json.tmbundle.git
-[submodule "lua.tmbundle"]
-	path = lua.tmbundle
-	url = https://github.com/textmate/lua.tmbundle.git
-[submodule "make.tmbundle"]
-	path = make.tmbundle
-	url = https://github.com/textmate/make.tmbundle.git
-[submodule "markdown.tmbundle"]
-	path = markdown.tmbundle
-	url = https://github.com/textmate/markdown.tmbundle.git
-[submodule "monokai.tmbundle"]
-	path = monokai.tmbundle
-	url = https://github.com/textmate/monokai.tmbundle
-[submodule "perl.tmbundle"]
-	path = perl.tmbundle
-	url = https://github.com/textmate/perl.tmbundle.git
-[submodule "php.tmbundle"]
-	path = php.tmbundle
-	url = https://github.com/textmate/php.tmbundle.git
-[submodule "property-list.tmbundle"]
-	path = property-list.tmbundle
-	url = https://github.com/textmate/property-list.tmbundle
-[submodule "python.tmbundle"]
-	path = python.tmbundle
-	url = https://github.com/textmate/python.tmbundle.git
-[submodule "ruby.tmbundle"]
-	path = ruby.tmbundle
-	url = https://github.com/textmate/ruby.tmbundle.git
-[submodule "shellscript.tmbundle"]
-	path = shellscript.tmbundle
-	url = https://github.com/textmate/shellscript.tmbundle.git
-[submodule "sql.tmbundle"]
-	path = sql.tmbundle
-	url = https://github.com/textmate/sql.tmbundle.git
-[submodule "xml.tmbundle"]
-	path = xml.tmbundle
-	url = https://github.com/textmate/xml.tmbundle.git
-[submodule "yaml.tmbundle"]
-	path = yaml.tmbundle
-	url = https://github.com/textmate/yaml.tmbundle.git
-[submodule "themes/soda"]
-	path = themes/soda
+[submodule "Soda"]
+	path = Soda
 	url = https://github.com/buymeasoda/soda-theme.git
-[submodule "themes/TextMate-Themes"]
-	path = themes/TextMate-Themes
-	url = https://github.com/filmgirl/TextMate-Themes.git
-[submodule "GoSublime"]
-	path = GoSublime
-	url = https://github.com/DisposaBoy/GoSublime.git
 [submodule "Vintageous"]
 	path = Vintageous
-	url = https://github.com/quarnster/Vintageous.git
+	url = https://github.com/guillermooo/Vintageous
+[submodule "TextMate-Themes"]
+	path = TextMate-Themes
+	url = https://github.com/filmgirl/TextMate-Themes.git
+[submodule "go-tmbundle"]
+	path = go-tmbundle
+	url = https://github.com/AlanQuatermain/go-tmbundle.git
