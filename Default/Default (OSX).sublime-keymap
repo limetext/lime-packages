@@ -1,3 +1,40 @@
 [
-	{ "keys": ["super+w"], "command": "close"},
+	{ "keys": ["super+shift+n"], "command": "new_window" },
+	{ "keys": ["super+shift+w"], "command": "close_window" },
+
+	{ "keys": ["super+n"], "command": "new_file" },
+	{ "keys": ["super+s"], "command": "save" },
+	{ "keys": ["super+w"], "command": "close" },
+
+	{ "keys": ["super+z"], "command": "undo" },
+	{ "keys": ["super+shift+z"], "command": "redo" },
+
+	{ "keys": ["super+x"], "command": "cut" },
+	{ "keys": ["super+c"], "command": "copy" },
+	{ "keys": ["super+v"], "command": "paste" },
+
+	{ "keys": ["super+shift+["], "command": "prev_view" },
+	{ "keys": ["super+shift+]"], "command": "next_view" },
+	{ "keys": ["super+alt+left"], "command": "prev_view" },
+	{ "keys": ["super+alt+right"], "command": "next_view" },
+
+	{ "keys": ["super+a"], "command": "select_all" },
+
+	{ "keys": ["super+]"], "command": "indent" },
+	{ "keys": ["super+["], "command": "unindent" },
+
+	{ "keys": ["super+d"], "command": "find_under_expand" },
+	{ "keys": ["super+g"], "command": "find_next" },
+	{ "keys": ["super+alt+e"], "command": "replace_next" },
+
+	{ "keys": ["ctrl+super+up"], "command": "swap_line_up" },
+	{ "keys": ["ctrl+super+down"], "command": "swap_line_down" },
+
+	{ "keys": ["super+j"], "command": "join_lines" },
+
+	{ "keys": ["super+k", "super+u"], "command": "upper_case" },
+	{ "keys": ["super+k", "super+l"], "command": "lower_case" },
+
+	{ "keys": ["ctrl+super+d"], "command": "noop" },
+	{ "keys": ["ctrl+super+shift+d"], "command": "noop" },
 ]
