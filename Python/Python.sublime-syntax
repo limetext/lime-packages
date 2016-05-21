@@ -12,7 +12,6 @@ file_extensions:
   - SConscript
   - gyp
   - gypi
-  - Snakefile
 first_line_match: ^#!/.*\bpython\d?\b
 scope: source.python
 variables:
@@ -51,7 +50,7 @@ contexts:
         1: storage.modifier.global.python
     - match: \b(nonlocal)\b
       captures:
-        1: storage.modifier.nonlocal.python
+        1: storage.modifier.nonlocal.python        
     - match: \b(?:(import)|(from))\b
       captures:
         1: keyword.control.import.python
@@ -160,13 +159,6 @@ contexts:
             - match: (?=\)\s*\:)
               pop: true
             - include: keyword_arguments
-            - match: "#"
-              captures:
-                0: punctuation.definition.comment.python
-              push:
-                - meta_scope: comment.line.number-sign.python
-                - match: \n
-                  pop: true
             - match: '\b([a-zA-Z_][a-zA-Z_0-9]*)\s*(?:(,)|(?=[\n\)]))'
               captures:
                 1: variable.parameter.function.python
@@ -546,7 +538,44 @@ contexts:
       scope: support.variable.magic.python
 
   string_quoted_double:
-    # Triple-quoted capital R raw string, unicode or not, no syntax embedding
+    - match: '([uU]?r)(""")'
+      captures:
+        1: storage.type.string.python
+        2: punctuation.definition.string.begin.python
+      push:
+        -
+          - meta_scope: string.quoted.double.block.raw-regex.python
+          - match: '"""'
+            captures:
+              0: punctuation.definition.string.end.python
+            pop: true
+        - "Regular Expressions (Python).sublime-syntax"
+      with_prototype:
+        - match: '(?=""")'
+          pop: true
+        - include: constant_placeholder
+        - include: escaped_unicode_char
+        - include: escaped_char
+    - match: '([uU]?r)(")'
+      captures:
+        1: storage.type.string.python
+        2: punctuation.definition.string.begin.python
+      push:
+        -
+          - meta_scope: string.quoted.double.single-line.raw-regex.python
+          - match: (")|(\n)
+            captures:
+              1: punctuation.definition.string.end.python
+              2: invalid.illegal.unclosed-string.python
+            pop: true
+        - "Regular Expressions (Python).sublime-syntax"
+      with_prototype:
+        - match: '(?="|\n)'
+          pop: true
+        - include: constant_placeholder
+        - include: escaped_unicode_char
+        - include: escaped_char
+
     - match: '([uU]?R)(""")'
       captures:
         1: storage.type.string.python
@@ -554,313 +583,243 @@ contexts:
       push:
         - meta_scope: string.quoted.double.block.raw.python
         - match: '"""'
-          scope: punctuation.definition.string.end.python
+          captures:
+            0: punctuation.definition.string.end.python
           pop: true
+        - include: constant_placeholder
         - include: escaped_unicode_char
-    # Triple-quoted raw string, unicode or not, will detect SQL, otherwise regex
-    - match: '([uU]?r)(""")'
-      captures:
-        1: storage.type.string.python
-        2: punctuation.definition.string.begin.python
-      push:
-        - match: '(?={{sql_indicator}})'
-          set:
-            - meta_scope: string.quoted.double.block.sql.python
-            - match: '"""'
-              scope: punctuation.definition.string.end.python
-              pop: true
-            - match: ''
-              with_prototype:
-                - match: '(?=""")'
-                  pop: true
-                - include: escaped_unicode_char
-                - include: constant_placeholder
-              push: 'scope:source.sql'
-        - match: '(?=\S)'
-          set:
-            - meta_scope: string.quoted.double.block.raw-regex.python
-            - match: '"""'
-              scope: punctuation.definition.string.end.python
-              pop: true
-            - match: ''
-              with_prototype:
-                - match: '(?=""")'
-                  pop: true
-                - include: escaped_unicode_char
-              push: 'scope:source.regexp.python'
-    # Triple-quoted string, unicode or not, will detect SQL
+        - include: escaped_char
     - match: '([uU]?)(""")'
       captures:
         1: storage.type.string.python
         2: punctuation.definition.string.begin.python
       push:
-        - match: '(?={{sql_indicator}})'
-          set:
-            - meta_scope: string.quoted.double.block.sql.python
-            - match: '"""'
-              scope: punctuation.definition.string.end.python
-              pop: true
-            - match: ''
-              with_prototype:
-                - match: '(?=""")'
-                  pop: true
-                - include: escaped_unicode_char
-                - include: escaped_char
-                - include: constant_placeholder
-              push: 'scope:source.sql'
-        - match: '(?=\S)'
-          set:
-            - meta_scope: string.quoted.double.block.python
-            - match: '"""'
-              scope: punctuation.definition.string.end.python
-              pop: true
-            - include: escaped_unicode_char
-            - include: escaped_char
-            - include: constant_placeholder
-    # Single-line capital R raw string, unicode or not, no syntax embedding
+        - meta_scope: string.quoted.double.block.python
+        - match: '"""'
+          captures:
+            0: punctuation.definition.string.end.python
+          pop: true
+        - include: constant_placeholder
+        - include: escaped_unicode_char
+        - include: escaped_char
     - match: '([uU]?R)(")'
       captures:
         1: storage.type.string.python
         2: punctuation.definition.string.begin.python
       push:
-        - meta_scope: string.quoted.double.block.raw.python
-        - match: '(")|(\n)'
+        - meta_scope: string.quoted.double.single-line.raw.python
+        - match: (")|(\n)
           captures:
             1: punctuation.definition.string.end.python
             2: invalid.illegal.unclosed-string.python
           pop: true
+        - include: constant_placeholder
         - include: escaped_unicode_char
-    # Single-line raw string, unicode or not, starting with a SQL keyword
-    - match: '([uU]?r)(")(?={{sql_indicator}})'
-      captures:
-        1: storage.type.string.python
-        2: punctuation.definition.string.begin.python
-      push:
-        - meta_scope: string.quoted.double.block.sql.python
-        - match: '(")|(\n)'
-          captures:
-            1: punctuation.definition.string.end.python
-            2: invalid.illegal.unclosed-string.python
-          pop: true
-        - match: ''
-          with_prototype:
-            - match: '(?=")'
-              pop: true
-            - include: escaped_unicode_char
-            - include: constant_placeholder
-          push: 'scope:source.sql'
-    # Single-line raw string, unicode or not, treated as regex
-    - match: '([uU]?r)(")'
-      captures:
-        1: storage.type.string.python
-        2: punctuation.definition.string.begin.python
-      push:
-        - meta_scope: string.quoted.double.block.raw-regex.python
-        - match: '(")|(\n)'
-          captures:
-            1: punctuation.definition.string.end.python
-            2: invalid.illegal.unclosed-string.python
-          pop: true
-        - match: ''
-          with_prototype:
-            - match: '(?=")'
-              pop: true
-            - include: escaped_unicode_char
-          push: 'scope:source.regexp.python'
-    # Single-line string, unicode or not, starting with a SQL keyword
-    - match: '([uU]?)(")(?={{sql_indicator}})'
-      captures:
-        1: storage.type.string.python
-        2: punctuation.definition.string.begin.python
-      push:
-        - meta_scope: string.quoted.double.block.sql.python
-        - match: '(")|(\n)'
-          captures:
-            1: punctuation.definition.string.end.python
-            2: invalid.illegal.unclosed-string.python
-          pop: true
-        - match: ''
-          with_prototype:
-            - match: '(?=")'
-              pop: true
-            - include: escaped_unicode_char
-            - include: escaped_char
-            - include: constant_placeholder
-          push: 'scope:source.sql'
-    # Single-line string, unicode or not
+        - include: escaped_char
     - match: '([uU]?)(")'
       captures:
         1: storage.type.string.python
         2: punctuation.definition.string.begin.python
       push:
-        - meta_scope: string.quoted.double.block.raw-regex.python
-        - match: '(")|(\n)'
+        - meta_scope: string.quoted.double.single-line.python
+        - match: (")|(\n)
           captures:
             1: punctuation.definition.string.end.python
             2: invalid.illegal.unclosed-string.python
           pop: true
+        - include: constant_placeholder
         - include: escaped_unicode_char
         - include: escaped_char
-        - include: escaped_unicode_char
-
+    - match: (""")(?={{sql_indicator}})
+      captures:
+        1: punctuation.definition.string.begin.python
+      push:
+        - meta_scope: string.quoted.double.block.sql.python
+        - match: '"""'
+          captures:
+            0: punctuation.definition.string.end.python
+          pop: true
+        - include: constant_placeholder
+        - include: escaped_char
+        - include: 'scope:source.sql'
+    - match: (")(?={{sql_indicator}})
+      captures:
+        1: punctuation.definition.string.begin.python
+      push:
+        - meta_scope: string.quoted.double.single-line.sql.python
+        - match: (")|(\n)
+          captures:
+            1: punctuation.definition.string.end.python
+            2: invalid.illegal.unclosed-string.python
+          pop: true
+        - include: constant_placeholder
+        - include: escaped_char
+        - include: 'scope:source.sql'
+    - match: (""")
+      captures:
+        1: punctuation.definition.string.begin.python
+      push:
+        - meta_scope: string.quoted.double.block.python
+        - match: '"""'
+          captures:
+            0: punctuation.definition.string.end.python
+          pop: true
+        - include: constant_placeholder
+        - include: escaped_char
+    - match: (")
+      captures:
+        1: punctuation.definition.string.begin.python
+      push:
+        - meta_scope: string.quoted.double.single-line.python
+        - match: (")|(\n)
+          captures:
+            1: punctuation.definition.string.end.python
+            2: invalid.illegal.unclosed-string.python
+          pop: true
+        - include: constant_placeholder
+        - include: escaped_char
 
   string_quoted_single:
-    # Triple-quoted capital R raw string, unicode or not, no syntax embedding
-    - match: '([uU]?R)('''''')'
+    - match: "([uU]?r)(''')"
       captures:
         1: storage.type.string.python
         2: punctuation.definition.string.begin.python
       push:
-        - meta_scope: string.quoted.single.block.raw.python
-        - match: ''''''''
-          scope: punctuation.definition.string.end.python
+        -
+          - meta_scope: string.quoted.single.block.raw-regex.python
+          - match: "'''"
+            captures:
+              0: punctuation.definition.string.end.python
+            pop: true
+        - "Regular Expressions (Python).sublime-syntax"
+      with_prototype:
+        - match: "(?=''')"
           pop: true
+        - include: constant_placeholder
         - include: escaped_unicode_char
-    # Triple-quoted raw string, unicode or not, will detect SQL, otherwise regex
-    - match: '([uU]?r)('''''')'
-      captures:
-        1: storage.type.string.python
-        2: punctuation.definition.string.begin.python
-      push:
-        - match: '(?={{sql_indicator}})'
-          set:
-            - meta_scope: string.quoted.single.block.sql.python
-            - match: ''''''''
-              scope: punctuation.definition.string.end.python
-              pop: true
-            - match: ''
-              with_prototype:
-                - match: '(?='''''')'
-                  pop: true
-                - include: escaped_unicode_char
-                - include: constant_placeholder
-              push: 'scope:source.sql'
-        - match: '(?=\S)'
-          set:
-            - meta_scope: string.quoted.single.block.raw-regex.python
-            - match: ''''''''
-              scope: punctuation.definition.string.end.python
-              pop: true
-            - match: ''
-              with_prototype:
-                - match: '(?='''''')'
-                  pop: true
-                - include: escaped_unicode_char
-              push: 'scope:source.regexp.python'
-    # Triple-quoted string, unicode or not, will detect SQL
-    - match: '([uU]?)('''''')'
-      captures:
-        1: storage.type.string.python
-        2: punctuation.definition.string.begin.python
-      push:
-        - match: '(?={{sql_indicator}})'
-          set:
-            - meta_scope: string.quoted.single.block.sql.python
-            - match: ''''''''
-              scope: punctuation.definition.string.end.python
-              pop: true
-            - match: ''
-              with_prototype:
-                - match: '(?='''''')'
-                  pop: true
-                - include: escaped_unicode_char
-                - include: escaped_char
-                - include: constant_placeholder
-              push: 'scope:source.sql'
-        - match: '(?=\S)'
-          set:
-            - meta_scope: string.quoted.single.block.python
-            - match: ''''''''
-              scope: punctuation.definition.string.end.python
-              pop: true
-            - include: escaped_unicode_char
-            - include: escaped_char
-            - include: constant_placeholder
-    # Single-line capital R raw string, unicode or not, no syntax embedding
-    - match: '([uU]?R)('')'
-      captures:
-        1: storage.type.string.python
-        2: punctuation.definition.string.begin.python
-      push:
-        - meta_scope: string.quoted.single.block.raw.python
-        - match: '('')|(\n)'
-          captures:
-            1: punctuation.definition.string.end.python
-            2: invalid.illegal.unclosed-string.python
-          pop: true
-        - include: escaped_unicode_char
-    # Single-line raw string, unicode or not, starting with a SQL keyword
-    - match: '([uU]?r)('')(?={{sql_indicator}})'
-      captures:
-        1: storage.type.string.python
-        2: punctuation.definition.string.begin.python
-      push:
-        - meta_scope: string.quoted.single.block.sql.python
-        - match: '('')|(\n)'
-          captures:
-            1: punctuation.definition.string.end.python
-            2: invalid.illegal.unclosed-string.python
-          pop: true
-        - match: ''
-          with_prototype:
-            - match: '(?='')'
-              pop: true
-            - include: escaped_unicode_char
-            - include: constant_placeholder
-          push: 'scope:source.sql'
-    # Single-line raw string, unicode or not, treated as regex
+        - include: escaped_char
     - match: '([uU]?r)('')'
       captures:
         1: storage.type.string.python
         2: punctuation.definition.string.begin.python
       push:
-        - meta_scope: string.quoted.single.block.raw-regex.python
-        - match: '('')|(\n)'
-          captures:
-            1: punctuation.definition.string.end.python
-            2: invalid.illegal.unclosed-string.python
+        -
+          - meta_scope: string.quoted.single.single-line.raw-regex.python
+          - match: (')|(\n)
+            captures:
+              1: punctuation.definition.string.end.python
+              2: invalid.illegal.unclosed-string.python
+            pop: true
+        - "Regular Expressions (Python).sublime-syntax"
+      with_prototype:
+        - match: "(?='|\n)"
           pop: true
-        - match: ''
-          with_prototype:
-            - match: '(?='')'
-              pop: true
-            - include: escaped_unicode_char
-          push: 'scope:source.regexp.python'
-    # Single-line string, unicode or not, starting with a SQL keyword
-    - match: '([uU]?)('')(?={{sql_indicator}})'
-      captures:
-        1: storage.type.string.python
-        2: punctuation.definition.string.begin.python
-      push:
-        - meta_scope: string.quoted.single.block.sql.python
-        - match: '('')|(\n)'
-          captures:
-            1: punctuation.definition.string.end.python
-            2: invalid.illegal.unclosed-string.python
-          pop: true
-        - match: ''
-          with_prototype:
-            - match: '(?='')'
-              pop: true
-            - include: escaped_unicode_char
-            - include: escaped_char
-            - include: constant_placeholder
-          push: 'scope:source.sql'
-    # Single-line string, unicode or not
-    - match: '([uU]?)('')'
-      captures:
-        1: storage.type.string.python
-        2: punctuation.definition.string.begin.python
-      push:
-        - meta_scope: string.quoted.single.block.raw-regex.python
-        - match: '('')|(\n)'
-          captures:
-            1: punctuation.definition.string.end.python
-            2: invalid.illegal.unclosed-string.python
-          pop: true
+        - include: constant_placeholder
         - include: escaped_unicode_char
         - include: escaped_char
+
+    - match: "([uU]?R)(''')"
+      captures:
+        1: storage.type.string.python
+        2: punctuation.definition.string.begin.python
+      push:
+        - meta_scope: string.quoted.single.block.raw.python
+        - match: "'''"
+          captures:
+            0: punctuation.definition.string.end.python
+          pop: true
+        - include: constant_placeholder
         - include: escaped_unicode_char
+        - include: escaped_char
+    - match: "([uU]?)(''')"
+      captures:
+        1: storage.type.string.python
+        2: punctuation.definition.string.begin.python
+      push:
+        - meta_scope: string.quoted.single.block.python
+        - match: "'''"
+          captures:
+            0: punctuation.definition.string.end.python
+          pop: true
+        - include: constant_placeholder
+        - include: escaped_unicode_char
+        - include: escaped_char
+    - match: "([uU]?R)(')"
+      captures:
+        1: storage.type.string.python
+        2: punctuation.definition.string.begin.python
+      push:
+        - meta_scope: string.quoted.single.single-line.raw.python
+        - match: (')|(\n)
+          captures:
+            1: punctuation.definition.string.end.python
+            2: invalid.illegal.unclosed-string.python
+          pop: true
+        - include: constant_placeholder
+        - include: escaped_unicode_char
+        - include: escaped_char
+    - match: "([uU]?)(')"
+      captures:
+        1: storage.type.string.python
+        2: punctuation.definition.string.begin.python
+      push:
+        - meta_scope: string.quoted.single.single-line.python
+        - match: (')|(\n)
+          captures:
+            1: punctuation.definition.string.end.python
+            2: invalid.illegal.unclosed-string.python
+          pop: true
+        - include: constant_placeholder
+        - include: escaped_unicode_char
+        - include: escaped_char
+    - match: (''')(?={{sql_indicator}})
+      captures:
+        1: punctuation.definition.string.begin.python
+      push:
+        - meta_scope: string.quoted.single.block.python
+        - match: "'''"
+          captures:
+            0: punctuation.definition.string.end.python
+          pop: true
+        - include: constant_placeholder
+        - include: escaped_char
+        - include: 'scope:source.sql'
+    - match: (')(?={{sql_indicator}})
+      captures:
+        1: punctuation.definition.string.begin.python
+      push:
+        - meta_scope: string.quoted.single.single-line.python
+        - match: (')|(\n)
+          captures:
+            1: punctuation.definition.string.end.python
+            2: invalid.illegal.unclosed-string.python
+          pop: true
+        - include: constant_placeholder
+        - include: escaped_char
+        - include: 'scope:source.sql'
+    - match: (''')
+      captures:
+        1: punctuation.definition.string.begin.python
+      push:
+        - meta_scope: string.quoted.single.block.python
+        - match: "'''"
+          captures:
+            0: punctuation.definition.string.end.python
+          pop: true
+        - include: constant_placeholder
+        - include: escaped_char
+    - match: (')
+      captures:
+        1: punctuation.definition.string.begin.python
+      push:
+        - meta_scope: string.quoted.single.single-line.python
+        - match: (')|(\n)
+          captures:
+            1: punctuation.definition.string.end.python
+            2: invalid.illegal.unclosed-string.python
+          pop: true
+        - include: constant_placeholder
+        - include: escaped_char
 
   strings:
     - include: string_quoted_double

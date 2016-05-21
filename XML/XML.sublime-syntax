@@ -19,8 +19,6 @@ contexts:
       push:
         - meta_scope: meta.tag.preprocessor.xml
         - match: (\?>)
-          captures:
-            1: punctuation.definition.tag.end.xml
           pop: true
         - match: " ([a-zA-Z-]+)"
           scope: entity.other.attribute-name.xml
@@ -34,8 +32,6 @@ contexts:
       push:
         - meta_scope: meta.tag.sgml.doctype.xml
         - match: \s*(>)
-          captures:
-            1: punctuation.definition.tag.end.xml
           pop: true
         - include: internalSubset
     - match: "<!--"
@@ -101,8 +97,6 @@ contexts:
         5: keyword.entitytype.xml
       push:
         - match: (>)
-          captures:
-            1: punctuation.definition.tag.end.xml
           pop: true
         - include: doublequotedString
         - include: singlequotedString
